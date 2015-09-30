@@ -5,4 +5,15 @@
 
 用法和原来的一样，只是这个版本可以用vertical属性
 
-下载安装 npm install https://github.com/jiangli373/react-slick.git
+下载安装 
+
+    npm install https://github.com/jiangli373/react-slick.git
+
+### Development
+Want to run demos locally
+```
+git clone https://github.com/akiran/react-slick
+npm install
+npm start
+open http://localhost:8000
+```
