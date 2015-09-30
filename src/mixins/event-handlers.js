@@ -68,15 +68,32 @@ var EventHandlers = {
       slideIndex: this.state.currentSlide,
       trackRef: this.refs.track
     }, this.props, this.state));
+
+    var swipeDirection = this.swipeDirection(this.state.touchObject);
     touchObject.curX = (e.touches) ? e.touches[0].pageX : e.clientX;
     touchObject.curY = (e.touches) ? e.touches[0].pageY : e.clientY;
     touchObject.swipeLength = Math.round(Math.sqrt(Math.pow(touchObject.curX - touchObject.startX, 2)));
 
+    if (swipeDirection === 'vertical') {
+      return;
+    }
+
+    if (this.props.verticalSwiping === true) {
+      touchObject.swipeLength = Math.round(Math.sqrt(
+          Math.pow(touchObject.curY - touchObject.startY, 2)));
+    }
+
+
+
     positionOffset = (this.props.rtl === false ? 1 : -1) * (touchObject.curX > touchObject.startX ? 1 : -1);
+
+    if (this.props.verticalSwiping === true) {
+      positionOffset = touchObject.curY > touchObject.startY ? 1 : -1;
+    }
 
     var currentSlide = this.state.currentSlide;
     var dotCount = Math.ceil(this.state.slideCount / this.props.slidesToScroll);
-    var swipeDirection = this.swipeDirection(this.state.touchObject);
+
     var touchSwipeLength = touchObject.swipeLength;
 
     if (this.props.infinite === false) {
@@ -95,7 +112,15 @@ var EventHandlers = {
       this.setState({ swiped: true });
     }
 
-    swipeLeft = curLeft + touchSwipeLength * positionOffset;
+    if (this.props.vertical === false) {
+      swipeLeft = curLeft + touchSwipeLength * positionOffset;
+    } else {
+      swipeLeft = curLeft + (touchSwipeLength * (this.state.listHeight / this.state.listWidth)) * positionOffset;
+    }
+    if (this.props.verticalSwiping === true) {
+      swipeLeft = curLeft + touchSwipeLength * positionOffset;
+    }
+
     this.setState({
       touchObject: touchObject,
       swipeLeft: swipeLeft,

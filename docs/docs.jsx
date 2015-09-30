@@ -7,9 +7,6 @@ var Docs = React.createClass({
   render: function () {
     return (
       <div className=''>
-          <div className='title-bar primary'>
-              <span className='title'>React Slick</span>
-          </div>
           <div className=''>
             <div className=''>
               <Demos />

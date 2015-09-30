@@ -36,11 +36,13 @@ var getSlideClasses = (spec) => {
 
 var getSlideStyle = function (spec) {
   var style = {};
-
   if (spec.variableWidth === undefined || spec.variableWidth === false) {
     style.width = spec.slideWidth;
+    style.height = spec.listHeight;
   }
-
+  if(spec.vertical===false){
+    style.float = 'left';
+  }
   if (spec.fade) {
     style.position = 'relative';
     style.left = -spec.index * spec.slideWidth;

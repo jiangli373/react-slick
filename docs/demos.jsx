@@ -17,28 +17,27 @@ var SingleItem = React.createClass({
   },
   render: function () {
     var settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      beforeChange: function (currentSlide, nextSlide) {
-        console.log('before change', currentSlide, nextSlide);
-      },
-      afterChange: function (currentSlide) {
-        console.log('after change', currentSlide);
-      },
+      autoplay: false,
+      arrows:false  ,
+      infinite:false ,
+      dots: false,
+      vertical: true,
+      verticalSwiping:true,
+      waitForAnimate:true,
+      speed:300,
+      fade:false
     };
     return (
       <div>
-        <h2> Single Item</h2>
         <Slider {...settings}>
-          <div onClick={this.click}><h3>{this.state.count}</h3></div>
-          <div><h3>2</h3></div>
-          <div><h3>3</h3></div>
-          <div><h3>4</h3></div>
-          <div><h3>5</h3></div>
-          <div><h3>6</h3></div>
+          <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/1.jpg" /></div></div>
+            <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/2.jpg" /></div></div>
+              <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/3.jpg" /></div></div>
+                <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/4.jpg" /></div></div>
+                  <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/5.jpg" /></div></div>
+                    <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/8.jpg" /></div></div>
+                      <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/7.jpg" /></div></div>
+                        <div class="slick-slide"><div class="slick-slide-inner"><img src="http://7xl6ha.com1.z0.glb.clouddn.com/9.jpg" /></div></div>
         </Slider>
       </div>
     );
@@ -362,16 +361,6 @@ var App = React.createClass({
     return (
       <div className='content'>
         <SingleItem />
-        <MultipleItems />
-        <Responsive />
-        <UnevenSets />
-        <CenterMode />
-        <CenterModeWithInitial />
-        <AutoPlay />
-        <VariableWidth />
-        <AdaptiveHeight />
-        <LazyLoad />
-        <Fade />
       </div>
     );
   }

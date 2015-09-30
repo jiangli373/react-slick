@@ -9,8 +9,14 @@ var helpers = {
   initialize: function (props) {
     var slideCount = React.Children.count(props.children);
     var listWidth = this.getWidth(this.refs.list.getDOMNode());
+    var listHeight = document.body.getBoundingClientRect().height;
     var trackWidth = this.getWidth(this.refs.track.getDOMNode());
-    var slideWidth = this.getWidth(this.getDOMNode())/props.slidesToShow;
+    var slideWidth = 0;
+    if (props.vertical === false) {
+      slideWidth =this.getWidth(this.getDOMNode())/props.slidesToShow;
+    } else {
+      slideWidth = Math.ceil(listWidth);
+    }
 
     var currentSlide = props.rtl ? slideCount - 1 - props.initialSlide : props.initialSlide;
 
@@ -18,6 +24,7 @@ var helpers = {
       slideCount: slideCount,
       slideWidth: slideWidth,
       listWidth: listWidth,
+      listHeight:listHeight,
       trackWidth: trackWidth,
       currentSlide: currentSlide
 
@@ -40,6 +47,7 @@ var helpers = {
     // Refactor it 
     var slideCount = React.Children.count(props.children);
     var listWidth = this.getWidth(this.refs.list.getDOMNode());
+    var listHeight = document.body.getBoundingClientRect().height;
     var trackWidth = this.getWidth(this.refs.track.getDOMNode());
     var slideWidth = this.getWidth(this.getDOMNode())/props.slidesToShow;
 
@@ -47,6 +55,7 @@ var helpers = {
       slideCount: slideCount,
       slideWidth: slideWidth,
       listWidth: listWidth,
+      listHeight:listHeight,
       trackWidth: trackWidth
     }, function () {
 
@@ -62,6 +71,9 @@ var helpers = {
   },
   getWidth: function getWidth(elem) {
     return elem.getBoundingClientRect().width || elem.offsetWidth;
+  },
+  getHeight: function getHeight(elem) {
+    return elem.getBoundingClientRect().height || elem.offsetHeight;
   },
   adaptHeight: function () {
     if (this.props.adaptiveHeight) {
@@ -243,7 +255,14 @@ var helpers = {
     if ((swipeAngle >= 135) && (swipeAngle <= 225)) {
         return (this.props.rtl === false ? 'right' : 'left');
     }
-
+    //todo 添加
+    if (this.props.verticalSwiping === true) {
+      if ((swipeAngle >= 35) && (swipeAngle <= 135)) {
+        return 'left';
+      } else {
+        return 'right';
+      }
+    }
     return 'vertical';
   },
   autoPlay: function () {

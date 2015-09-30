@@ -81,7 +81,9 @@ export var InnerSlider = React.createClass({
       slidesToShow: this.props.slidesToShow,
       slideCount: this.state.slideCount,
       trackStyle: this.state.trackStyle,
-      variableWidth: this.props.variableWidth
+      variableWidth: this.props.variableWidth,
+      listHeight:this.state.listHeight,
+      vertical:this.props.vertical
     };
 
     var dots;
@@ -116,10 +118,15 @@ export var InnerSlider = React.createClass({
       prevArrow = (<PrevArrow {...arrowProps} />);
       nextArrow = (<NextArrow {...arrowProps} />);
     }
-
+    //fix 这里加入设定铺满全屏的个高度
+    var height = document.body.getBoundingClientRect().height;
+    var style = {
+      height:height
+    };
     return (
       <div className={className}>
         <div
+            style={style}
           ref='list'
           className="slick-list"
           onMouseDown={this.swipeStart}
