@@ -5,6 +5,7 @@
   "main": "./lib",
   "scripts": {
     "start": "./node_modules/.bin/gulp server",
+    "generateLib":"./node_modules/.bin/babel ./src --out-dir ./lib && ./node_modules/.bin/gulp dist",
     "prepublish": "./node_modules/.bin/babel ./src --out-dir ./lib && ./node_modules/.bin/gulp dist",
     "test": "./node_modules/.bin/karma start --single-run"
   },

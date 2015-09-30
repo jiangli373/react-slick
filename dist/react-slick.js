@@ -285,7 +285,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      slidesToShow: this.props.slidesToShow,
 	      slideCount: this.state.slideCount,
 	      trackStyle: this.state.trackStyle,
-	      variableWidth: this.props.variableWidth
+	      variableWidth: this.props.variableWidth,
+	      listHeight: this.state.listHeight,
+	      vertical: this.props.vertical
 	    };
 
 	    var dots;
@@ -320,13 +322,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      prevArrow = _react2['default'].createElement(_arrows.PrevArrow, arrowProps);
 	      nextArrow = _react2['default'].createElement(_arrows.NextArrow, arrowProps);
 	    }
-
+	    //fix 这里加入设定铺满全屏的个高度
+	    var height = document.body.getBoundingClientRect().height;
+	    var style = {
+	      height: height
+	    };
 	    return _react2['default'].createElement(
 	      'div',
 	      { className: className },
 	      _react2['default'].createElement(
 	        'div',
 	        {
+	          style: style,
 	          ref: 'list',
 	          className: 'slick-list',
 	          onMouseDown: this.swipeStart,
@@ -602,12 +609,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (this.props.vertical === false) {
-	      swipeLeft = curLeft + swipeLength * positionOffset;
+	      swipeLeft = curLeft + touchSwipeLength * positionOffset;
 	    } else {
-	      swipeLeft = curLeft + swipeLength * (this.state.listHeight / this.state.listWidth) * positionOffset;
+	      swipeLeft = curLeft + touchSwipeLength * (this.state.listHeight / this.state.listWidth) * positionOffset;
 	    }
 	    if (this.props.verticalSwiping === true) {
-	      swipeLeft = curLeft + swipeLength * positionOffset;
+	      swipeLeft = curLeft + touchSwipeLength * positionOffset;
 	    }
 
 	    this.setState({
@@ -746,6 +753,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var slideOffset = 0;
 	  var targetLeft;
 	  var targetSlide;
+	  var verticalHeight,
+	      verticalOffset = 0;
+
+	  verticalHeight = spec.listHeight;
 
 	  if (spec.fade) {
 	    return 0;
@@ -754,18 +765,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (spec.infinite) {
 	    if (spec.slideCount > spec.slidesToShow) {
 	      slideOffset = spec.slideWidth * spec.slidesToShow * -1;
+	      verticalOffset = verticalHeight * spec.slidesToShow * -1;
 	    }
 	    if (spec.slideCount % spec.slidesToScroll !== 0) {
 	      if (spec.slideIndex + spec.slidesToScroll > spec.slideCount && spec.slideCount > spec.slidesToShow) {
 	        if (spec.slideIndex > spec.slideCount) {
 	          slideOffset = (spec.slidesToShow - (spec.slideIndex - spec.slideCount)) * spec.slideWidth * -1;
+	          verticalOffset = (spec.slidesToShow - (spec.slideIndex - spec.slideCount)) * verticalHeight * -1;
 	        } else {
 	          slideOffset = spec.slideCount % spec.slidesToScroll * spec.slideWidth * -1;
+	          verticalOffset = spec.slideCount % spec.slidesToScroll * verticalHeight * -1;
 	        }
 	      }
 	    }
+	  } else {
+	    if (spec.slideIndex + spec.slidesToShow > spec.slideCount) {
+	      slideOffset = (spec.slideIndex + spec.slidesToShow - spec.slideCount) * spec.slideWidth;
+	      verticalOffset = (spec.slideIndex + spec.slidesToShow - spec.slideCount) * verticalHeight;
+	    }
 	  }
-
+	  if (spec.slideCount <= spec.slidesToShow) {
+	    slideOffset = 0;
+	    verticalOffset = 0;
+	  }
 	  if (spec.centerMode) {
 	    if (spec.infinite) {
 	      slideOffset += spec.slideWidth * Math.floor(spec.slidesToShow / 2);
@@ -773,8 +795,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      slideOffset = spec.slideWidth * Math.floor(spec.slidesToShow / 2);
 	    }
 	  }
-
-	  targetLeft = spec.slideIndex * spec.slideWidth * -1 + slideOffset;
+	  if (spec.vertical === false) {
+	    targetLeft = spec.slideIndex * spec.slideWidth * -1 + slideOffset;
+	  } else {
+	    targetLeft = spec.slideIndex * verticalHeight * -1 + verticalOffset;
+	  }
 
 	  if (spec.variableWidth === true) {
 	    var targetSlideIndex;
@@ -863,9 +888,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  initialize: function initialize(props) {
 	    var slideCount = _react2['default'].Children.count(props.children);
 	    var listWidth = this.getWidth(this.refs.list.getDOMNode());
-	    var listHeight = this.getHeight(this.refs.list.getDOMNode());
+	    var listHeight = document.body.getBoundingClientRect().height;
 	    var trackWidth = this.getWidth(this.refs.track.getDOMNode());
-	    var slideWidth = this.getWidth(this.getDOMNode()) / props.slidesToShow;
+	    var slideWidth = 0;
+	    if (props.vertical === false) {
+	      slideWidth = this.getWidth(this.getDOMNode()) / props.slidesToShow;
+	    } else {
+	      slideWidth = Math.ceil(listWidth);
+	    }
 
 	    var currentSlide = props.rtl ? slideCount - 1 - props.initialSlide : props.initialSlide;
 
@@ -873,6 +903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      slideCount: slideCount,
 	      slideWidth: slideWidth,
 	      listWidth: listWidth,
+	      listHeight: listHeight,
 	      trackWidth: trackWidth,
 	      currentSlide: currentSlide
 
@@ -895,6 +926,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Refactor it
 	    var slideCount = _react2['default'].Children.count(props.children);
 	    var listWidth = this.getWidth(this.refs.list.getDOMNode());
+	    var listHeight = document.body.getBoundingClientRect().height;
 	    var trackWidth = this.getWidth(this.refs.track.getDOMNode());
 	    var slideWidth = this.getWidth(this.getDOMNode()) / props.slidesToShow;
 
@@ -902,6 +934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      slideCount: slideCount,
 	      slideWidth: slideWidth,
 	      listWidth: listWidth,
+	      listHeight: listHeight,
 	      trackWidth: trackWidth
 	    }, function () {
 
@@ -917,6 +950,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 	  getWidth: function getWidth(elem) {
 	    return elem.getBoundingClientRect().width || elem.offsetWidth;
+	  },
+	  getHeight: function getHeight(elem) {
+	    return elem.getBoundingClientRect().height || elem.offsetHeight;
 	  },
 	  adaptHeight: function adaptHeight() {
 	    if (this.props.adaptiveHeight) {
@@ -1507,11 +1543,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var getSlideStyle = function getSlideStyle(spec) {
 	  var style = {};
-
 	  if (spec.variableWidth === undefined || spec.variableWidth === false) {
 	    style.width = spec.slideWidth;
+	    style.height = spec.listHeight;
 	  }
-
+	  if (spec.vertical === false) {
+	    style.float = 'left';
+	  }
 	  if (spec.fade) {
 	    style.position = 'relative';
 	    style.left = -spec.index * spec.slideWidth;
